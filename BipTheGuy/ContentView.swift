@@ -11,6 +11,8 @@ import AVFAudio
 struct ContentView: View {
     
     @State private var audioPlayer: AVAudioPlayer!
+    @State private var isFullSize = true
+    
     
     var body: some View {
         VStack {
@@ -20,9 +22,17 @@ struct ContentView: View {
             Image("clown")
                 .resizable()
                 .scaledToFit()
+                .scaleEffect(isFullSize ? 1.0 : 0.9)
                 .onTapGesture {
-                playSound(soundName: "punchSound")
-            }
+                    playSound(soundName: "punchSound")
+                    isFullSize = false
+//                    scale = scale + 0.1 // increase image size by 10%
+                    withAnimation (.spring(response: 0.3, dampingFraction: 0.3)) {
+                        isFullSize = true // will go from 90% to 100% size using the .spring animation
+                    }
+                }
+//                .animation(.spring(response: 0.3, dampingFraction: 0.3), value: scale)
+            
             
             Spacer()
             
@@ -31,7 +41,7 @@ struct ContentView: View {
             } label: {
                 Label("Photo Library", systemImage: "photo.fill.on.rectangle.fill")
             }
-
+            
         }
         .padding()
     }
